@@ -26,9 +26,9 @@
 %%
 %%  CSC384 Winter 2014, Assignment 1
 %%
-%%  NAME:
+%%  NAME:Vincent Lee
 %%
-%%  STUDENT NUMBER:
+%%  STUDENT NUMBER:997454419
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

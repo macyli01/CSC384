@@ -5,9 +5,9 @@
 %%
 %%  CSC384 Winter 2014, Assignment 1
 %%
-%%  NAME:
+%%  NAME:Vincent Lee
 %%
-%%  STUDENT NUMBER:  
+%%  STUDENT NUMBER:997454419
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -53,15 +53,30 @@ mazesDatabase([
 %%     NewState is a state reachable from State by a move and
 %%     Cost is the cost (here simply 1) for that corresponding move.
 %% ------------------------------------------------------------------------------------------------------------
+%% right, left, up, down
 
+not_member( X , Y):-
+	not(member(X , Y)).
 
-
+successors(state, []):-
+	maze(_MazeName, _, _, _, _ , G),
+	equality(state, G).
+	
+successors( C/R, Succs):-
+	maze(_MazeName, M, N, O, _ , G),
+	not_member((C+1/R), O), C+1 < N, append( (1, C+1/R), Succs),
+	not_member((C-1/R), O), C-1 > 1, append( (1, C-1/R), Succs),
+	not_member((C/R-1), O), R-1 > 1, append( (1, C/R), Succs),
+	not_member((C/R+1), O), R+1 < M, append( (1, C/R), Succs).
 
 %%
 %% 2. State equality test when two states are equal.
 %%      equality(+State1,+State2) 
 %%
 
+equality( A/B, C/D) :-
+	A == C, 
+	B == D. 	
 
 %%
 %% 3. Four different heuristic functions:
@@ -78,14 +93,17 @@ hfnUniform(_,0).       % causes search algorithm to do uniform costs search.
 
 %% Implement the Manhattan Distance
 hfnManhattan(X/Y, Val) :- 
-
+	maze(_MazeName, _, _, _, _, C/R),
+	Val is abs(C - X) + abs(R - Y).
 
 %% Implement the Rounded Euclidean Distance  (you may use sqrt and floor)
 hfnEuclid(X/Y, Val) :- 
-
+	maze(_MazeName, _, _, _, _, C/R),
+	sqrt((C - X)*(C - X) + (R - Y)*(R - Y), A ),
+	floor(A, Val).
 
 %% Implement your own heuristic function
-hfnMyHeuristic(_, 0) :-
+	hfnMyHeuristic(_, 0).
 
 
 
