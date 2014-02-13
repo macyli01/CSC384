@@ -1,0 +1,197 @@
+%% ----------------------------------------------------------
+%%    Answers to Questions of Part II, Assignment 1
+
+%% Instructions: 
+
+%% Please edit this file in the following way to answer the text
+%% questions of Assignment 1. 
+
+%% - Please enter your name and student number in the space provided.
+
+%% - Please replace any occurrence of '[yes/no]' with either 'yes' or
+%% 'no' to answer the respective question.
+
+%% - Where applicable, replace any occurrence of '[explain in less than N words]' 
+%%   with an explanation containing no more than N words. 
+ 
+%% - Do not remove any other lines.
+
+%% - Any line starting with a '%' will be ignored.
+
+%% - Submit this file electronically.
+
+%% ----------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  CSC384 Winter 2014, Assignment 1
+%%
+%%  NAME:
+%%
+%%  STUDENT NUMBER:
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+/* ------------------------------------------------------ */
+<Question 4>
+%% [Heuristics I]
+%% Explain in a few sentences how your heuristic works.
+[explain in less than 200 words]
+
+
+/* ------------------------------------------------------ */
+<Question 5>
+%% [Heuristics II]
+%% Which of the four heuristics are admissible?
+<5. 1 Null>
+[yes/no]
+
+
+<5.2 Manhattan>
+[yes/no]
+
+
+<5.3 Rounded Euclidean>
+[yes/no]
+
+
+<5.4  Your Heuristic>
+[yes/no]
+
+%% For any which is not admissible give a counter example.
+<5.5 Counter examples>
+[explain in less than 400 words]
+
+
+/* ------------------------------------------------------ */
+<Question 6>
+%% [Heuristics III]
+%% Suppose we modify the cost function so that moving to the left 
+%% now costs 0.5, and all other moves still cost 1.
+%% Which of the heuristics are admissible now? 
+<6.1 Null>
+[yes/no]
+
+
+<6.2 Manhattan>
+[yes/no]
+
+
+<6.3 Rounded Euclidean>
+[yes/no]
+
+
+<6.4 Your Heuristic>
+[yes/no]
+
+%% For any which is not admissible, give a counter example.
+%% (To save space, you may refer to counter examples from a previous 
+%% question if applicable.)
+<6.5 Counter examples>
+[explain in less than 400 words]
+
+
+/* ------------------------------------------------------ */
+<Question 7>
+%% [Heuristics IV]
+%% For the original problem, imagine the robot would also be able to move
+%% diagonally (with the same cost 1). Which of the four heuristics will
+%% be admissible for this new problem?  
+<7.1 Null>
+[yes/no]
+
+
+<7.2 Manhattan>
+[yes/no]
+
+
+<7.3 Rounded Euclidean>
+[yes/no]
+
+
+<7.4 Your Heuristic>
+[yes/no]
+
+%% For any which is not admissible, give a counter example.
+%% (To save space, you may refer to counter examples from a previous
+%% question if applicable.)
+<7.5 Counter examples>
+[explain in less than 400 words]
+
+
+
+/* ------------------------------------------------------ */
+<Question 8>
+%% [Performance]
+%% Run your implementation on each of the 3 given mazes and 3
+%%  provided search routines (use go/2, goCC/2, goIDA/2). 
+%%  For each of the 9 maze/search routine combinations use each of 
+%%  the 4 heuristics (i.e.,~totalling 36 runs). Note that not all problems 
+%%  may be solvable with all heuristics with the node limit set in the algorithms. 
+%%  The node limit is 10,000 for the astar/astarcC searches 
+%%  and 30,000 for  the idastar search.
+%%  Then, fill in the table below that compares the numbers of nodes expanded by
+%%  each of the provided search algorithms for all four heuristics.
+%%  If a search does not terminate within the given node limit, 
+%%  indicate it with ">limit" in the table
+
+<8.1 Table>
+
+         |             | # nodes   | # nodes    | # nodes  |
+   Maze  | Heuristic   | for A*    |  for A*-CC | for IDA* |
+   ------+-------------+-----------+------------+----------+
+   maze1 | Null        |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze1 | Manhattan   |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze1 | Euclidian   |           |            |          | 
+   ------+-------------+-----------+------------+----------+ 
+   maze1 | MyHeuristic |           |            |          | 
+   ------+-------------+-----------+------------+----------+
+   maze2 | Null        |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze2 | Manhattan   |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze2 | Euclidian   |           |            |          | 
+   ------+-------------+-----------+------------+----------+
+   maze2 | MyHeuristic |           |            |          | 
+   ------+-------------+-----------+------------+----------+
+   maze3 | Null        |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze3 | Manhattan   |           |            |          |
+   ------+-------------+-----------+------------+----------+
+   maze3 | Euclidian   |           |            |          | 
+   ------+-------------+-----------+------------+----------+
+   maze3 | MyHeuristic |           |            |          | 
+   ------+-------------+-----------+------------+----------+
+
+
+  
+% Now, based on the results in the above table, draw your conclusions about the
+% quality of the heuristics and the search routines.
+<8.2 Conclusions>
+[explain in less than 200 words]
+
+
+
+/* ------------------------------------------------------ */
+<Question 9>
+%% [State Representation]
+%% Imagine a variant of the maze problem where 
+%% the player initially has a number of JumpOnObstacle pills.
+%% The player can move on top of an obstacle position if he still has
+%% at least one of these pills available (in effect this work as if 
+%% there was no obstacle there).
+%% Note that moving on top of an obstacle will consume one pill.
+%% How would you minimally represent the states for this problem and what 
+%% changes to the successors predicate will you need to make?
+%% Do not write any code, briefly explain in English.
+<9>
+[explain in less than 200 words]
+
+
+
+
+
