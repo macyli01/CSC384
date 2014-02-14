@@ -38,7 +38,10 @@
 <Question 4>
 %% [Heuristics I]
 %% Explain in a few sentences how your heuristic works.
-[explain in less than 200 words]
+
+My heuristic combines Manhattan distance and Euclidian distance together, 
+and subtract the number of sucessors to reward a frontier with more 
+possible routes. 
 
 
 /* ------------------------------------------------------ */
@@ -46,23 +49,37 @@
 %% [Heuristics II]
 %% Which of the four heuristics are admissible?
 <5. 1 Null>
-[yes/no]
+yes
 
 
 <5.2 Manhattan>
-[yes/no]
+yes
 
 
 <5.3 Rounded Euclidean>
-[yes/no]
+yes
 
 
 <5.4  Your Heuristic>
-[yes/no]
+no
 
 %% For any which is not admissible give a counter example.
 <5.5 Counter examples>
-[explain in less than 400 words]
+Consider the following segment of a maze,
+
+XXXXXX
+XG---X
+X----X
+X--X-X
+X--X*X
+XXXXXX
+
+Manhattan Heuristic would give an estimate of 7
+Euclidian Heuristic would give an estimate of 5
+Number of available paths of the frontier is 2
+
+5 + 7 -2  = 10 < 7
+The resulted estimate is greater than the actual cost. 
 
 
 /* ------------------------------------------------------ */
@@ -72,26 +89,34 @@
 %% now costs 0.5, and all other moves still cost 1.
 %% Which of the heuristics are admissible now? 
 <6.1 Null>
-[yes/no]
+yes
 
 
 <6.2 Manhattan>
-[yes/no]
+no
 
 
 <6.3 Rounded Euclidean>
-[yes/no]
+no
 
 
 <6.4 Your Heuristic>
-[yes/no]
+no
 
 %% For any which is not admissible, give a counter example.
 %% (To save space, you may refer to counter examples from a previous 
 %% question if applicable.)
 <6.5 Counter examples>
-[explain in less than 400 words]
+Consider the following segment of a maze. 
 
+XXXXXX
+G-***
+XXXXXX
+
+Both Euclidian and Manhattan heuristics will give an estimate of 1 instead 
+of 0.5 which costs less than the heuristic estimation.
+
+For my heuristic, please refer to the previous question.
 
 /* ------------------------------------------------------ */
 <Question 7>
@@ -100,26 +125,34 @@
 %% diagonally (with the same cost 1). Which of the four heuristics will
 %% be admissible for this new problem?  
 <7.1 Null>
-[yes/no]
+yes
 
 
 <7.2 Manhattan>
-[yes/no]
+no
 
 
 <7.3 Rounded Euclidean>
-[yes/no]
+yes
 
 
 <7.4 Your Heuristic>
-[yes/no]
+no
 
 %% For any which is not admissible, give a counter example.
 %% (To save space, you may refer to counter examples from a previous
 %% question if applicable.)
 <7.5 Counter examples>
-[explain in less than 400 words]
+For Manhattan, consider the following segment of a mazw.
 
+XXXXXXX
+XG----
+X-*
+
+Manhattan heuristic would overestimate the moves required. 
+
+For my heuristic, it will not be admissible because one of it's compnent, 
+Manhattan heuristic is no admissible.
 
 
 /* ------------------------------------------------------ */
@@ -142,29 +175,29 @@
          |             | # nodes   | # nodes    | # nodes  |
    Maze  | Heuristic   | for A*    |  for A*-CC | for IDA* |
    ------+-------------+-----------+------------+----------+
-   maze1 | Null        |           |            |          |
+   maze1 | Null        | 6808      | 62         | >limit   |
    ------+-------------+-----------+------------+----------+
-   maze1 | Manhattan   |           |            |          |
+   maze1 | Manhattan   | 2283      | 50         | 4355     |
    ------+-------------+-----------+------------+----------+
-   maze1 | Euclidian   |           |            |          | 
+   maze1 | Euclidian   | 2566      | 56         | 8729     | 
    ------+-------------+-----------+------------+----------+ 
-   maze1 | MyHeuristic |           |            |          | 
+   maze1 | MyHeuristic | 1430      | 50         | 3939     | 
    ------+-------------+-----------+------------+----------+
-   maze2 | Null        |           |            |          |
+   maze2 | Null        | >limit    | 71         | >limit   |
    ------+-------------+-----------+------------+----------+
-   maze2 | Manhattan   |           |            |          |
+   maze2 | Manhattan   | 23        | 20         | 80       |
    ------+-------------+-----------+------------+----------+
-   maze2 | Euclidian   |           |            |          | 
+   maze2 | Euclidian   | 2484      | 63         | 2818     | 
    ------+-------------+-----------+------------+----------+
-   maze2 | MyHeuristic |           |            |          | 
+   maze2 | MyHeuristic | 17        | 17         | 28       | 
    ------+-------------+-----------+------------+----------+
-   maze3 | Null        |           |            |          |
+   maze3 | Null        | >limit    | 57         | >limit   |
    ------+-------------+-----------+------------+----------+
-   maze3 | Manhattan   |           |            |          |
+   maze3 | Manhattan   | 1973      | 46	        | 5160     |
    ------+-------------+-----------+------------+----------+
-   maze3 | Euclidian   |           |            |          | 
+   maze3 | Euclidian   | >limit	   | 46         | 29163    | 
    ------+-------------+-----------+------------+----------+
-   maze3 | MyHeuristic |           |            |          | 
+   maze3 | MyHeuristic | 1753      | 45         | 6724     | 
    ------+-------------+-----------+------------+----------+
 
 
@@ -172,8 +205,14 @@
 % Now, based on the results in the above table, draw your conclusions about the
 % quality of the heuristics and the search routines.
 <8.2 Conclusions>
-[explain in less than 200 words]
+A*-CC seems to be the best search algorithm for finding solutions to small 
+mazes in this setting.
 
+Based on the results of A*-CC, it seems that myHeuristic is the best 
+heuristic for solving small mazes. However, the solution may not be optimal .
+
+Otherwise, Manhattan distance would be the best heuristic to look for 
+optimal solution for a small maze. 
 
 
 /* ------------------------------------------------------ */
@@ -189,8 +228,11 @@
 %% changes to the successors predicate will you need to make?
 %% Do not write any code, briefly explain in English.
 <9>
-[explain in less than 200 words]
+We will need a counter to keep track of the number of pills, so that the 
+number of pills can be incremented when the search backtracks. 
 
+The successors predicate will need to check if the player has more than 0
+pills, the user can choose to ignore all obsticles and climb on it. 
 
 
 

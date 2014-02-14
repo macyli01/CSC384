@@ -1,7 +1,6 @@
-
 %%Starter code for 384-A1, Last modified: Jan 25 2014 - Sheila McIlraith
 %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %%  CSC384 Winter 2014, Assignment 1
 %%
@@ -55,19 +54,15 @@ mazesDatabase([
 %% ------------------------------------------------------------------------------------------------------------
 %% right, left, up, down
 
-not_member( X , Y):-
-	not(member(X , Y)).
-
-successors(state, []):-
-	maze(_MazeName, _, _, _, _ , G),
-	equality(state, G).
-	
-successors( C/R, Succs):-
-	maze(_MazeName, M, N, O, _ , G),
-	not_member((C+1/R), O), C+1 < N, append( (1, C+1/R), Succs),
-	not_member((C-1/R), O), C-1 > 1, append( (1, C-1/R), Succs),
-	not_member((C/R-1), O), R-1 > 1, append( (1, C/R), Succs),
-	not_member((C/R+1), O), R+1 < M, append( (1, C/R), Succs).
+successors(C/R, Succs):-
+	maze( _, M, N, O, _ , _),
+	(C < N, XR is C+1, not(member(XR/R,O)) -> SR = [(1,XR/R)]; SR = []), 	
+	(C > 1, XL is C-1, not(member(XL/R,O)) -> SL = [(1,XL/R)]; SL = []), 	
+	(R > 1, XU is R-1, not(member(C/XU,O)) -> SU = [(1,C/XU)]; SU = []), 	
+	(R < M, XD is R+1, not(member(C/XD,O)) -> SD = [(1,C/XD)]; SD = []), 	
+	append(SR, SL, Temp),
+	append(SU, SD, Temp2),
+	append(Temp, Temp2, Succs).
 
 %%
 %% 2. State equality test when two states are equal.
@@ -75,8 +70,8 @@ successors( C/R, Succs):-
 %%
 
 equality( A/B, C/D) :-
-	A == C, 
-	B == D. 	
+	A is C, 
+	B is D. 	
 
 %%
 %% 3. Four different heuristic functions:
@@ -93,18 +88,27 @@ hfnUniform(_,0).       % causes search algorithm to do uniform costs search.
 
 %% Implement the Manhattan Distance
 hfnManhattan(X/Y, Val) :- 
-	maze(_MazeName, _, _, _, _, C/R),
+	maze(_, _, _, _, _, C/R),
 	Val is abs(C - X) + abs(R - Y).
 
 %% Implement the Rounded Euclidean Distance  (you may use sqrt and floor)
 hfnEuclid(X/Y, Val) :- 
-	maze(_MazeName, _, _, _, _, C/R),
+	maze(_, _, _, _, _, C/R),
 	sqrt((C - X)*(C - X) + (R - Y)*(R - Y), A ),
 	floor(A, Val).
 
 %% Implement your own heuristic function
-	hfnMyHeuristic(_, 0).
 
+incr( X, X1) :-
+	X1 is X+1.
+
+hfnMyHeuristic(X/Y, F) :-
+	maze(_, _, _, O, _, C/R),
+	hfnManhattan(X/Y, MD),
+	hfnEuclid(X/Y, E),
+	successors(X/Y, NS),
+	length(NS, L),	
+	F is MD + E - L.	
 
 
 /*-------------------------------------------------------------------------
