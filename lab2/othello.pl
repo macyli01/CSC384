@@ -62,6 +62,17 @@ initBoard([ [.,.,.,.,.,.],
 initialize(InitialState,1):-
 	initBoard(InitialState).
 
+%% Helper Functions
+%% defin count_pieces( List, Player, Number of pieces)
+
+count_pieces([], _ , 0).
+count_pieces([H|T], H, C):-
+	count_pieces(T, H, C2),
+	C is C2+1. 
+count_pieces([H|T], P, C):-
+	H \= P,
+	count_pieces(T, P, C2), 
+	C is C2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%winner(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
