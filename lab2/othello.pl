@@ -1,9 +1,9 @@
 /* ----------------------------------------------------------
     CSC384 Assignment 2 
 
-% Surname:
-% First Name:
-% Student Number: 
+% Surname:Lee
+% First Name:Vincent
+% Student Number:997454419 
 
   ------------------------------------------------------ */
 
@@ -35,11 +35,6 @@
 % /* ------------------------------------------------------ */
 
 
-
-
-
-
-
 % /* ------------------------------------------------------ */
 
 % We use the following State Representation: 
@@ -64,6 +59,8 @@ initBoard([ [.,.,.,.,.,.],
 %%%  holds iff InitialState is the initial state and 
 %%%  InitialPlyr is the player who moves first. 
 
+initialize(InitialState,1):-
+	initBoard(InitialState).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%winner(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
