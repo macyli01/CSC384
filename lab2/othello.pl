@@ -63,7 +63,8 @@ initialize(InitialState,1):-
 	initBoard(InitialState).
 
 %% Helper Functions
-%% defin count_pieces( List, Player, Number of pieces)
+%% define count_pieces( List, Player, Number of pieces)
+%% Counts the number of pieces the player owns in a particular row.
 
 count_pieces([], _ , 0).
 count_pieces([H|T], H, C):-
@@ -80,8 +81,10 @@ count_pieces([H|T], P, C):-
 %     - returns winning player if State is a terminal position and
 %     Plyr has a higher score than the other player 
 
-
-
+winner(State, Plyr):-	
+	terminal(State),
+	not(tie(State).
+	
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%tie(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,8 +101,7 @@ count_pieces([H|T], P, C):-
 %% define terminal(State). 
 %   - true if State is a terminal   
 
-
-
+terminal(State):- !.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%showState(State)%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,10 +148,38 @@ printList([H | L]) :-
 %% define validmove(Plyr,State,Proposed). 
 %   - true if Proposed move by Plyr is valid at State.
 
+%%Move must be within the board
+inBound(R,C):-
+	R >= 0,
+	R < 6, 
+	C >= 0,
+	C < 6.
 
+valid_dir( State, Plyr, [R, C], DX, DY):-
+	( Plyr == 1 -> Opponent is 2; Opponent is 1),
+	NewR is R + DY, 
+	NewC is C + DY, 
+	inBound(NewR, NewC),
+	get(State, [NewR, NewC], Value),
+	Value \= '.',
+	( Value == Opponent	->
+		valid_dir(State, Plyr, [NewR , NewC] , DX, DY)
+	; true).
 
+validmove(Plyr, S, [R|C]):-
+	inBound(R, C),
+	get(S, [R|C], Value),
+	Value == '.',
+	valid_dir( S, Plyr, [R, C],  1,  0),
+	valid_dir( S, Plyr, [R, C],  0,  1),
+	valid_dir( S, Plyr, [R, C], -1,	 0),
+	valid_dir( S, Plyr, [R, C],  0, -1),
 
-
+	valid_dir( S, Plyr, [R, C],  1,  1),
+	valid_dir( S, Plyr, [R, C],	 1, -1),
+	valid_dir( S, Plyr, [R, C], -1,  1),
+	valid_dir( S, Plyr, [R, C], -1, -1).
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%h(State,Val)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
 %% define h(State,Val). 
@@ -160,8 +190,7 @@ printList([H | L]) :-
 %          the value of state (see handout on ideas about
 %          good heuristics.
 
-
-
+h(_, 0).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%lowerBound(B)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
@@ -169,6 +198,7 @@ printList([H | L]) :-
 %   - returns a value B that is less than the actual or heuristic value
 %     of all states.
 
+lowerBound(-100).  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%upperBound(B)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
@@ -176,7 +206,7 @@ printList([H | L]) :-
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-
+upperBound(100). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                       %
