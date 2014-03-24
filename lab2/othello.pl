@@ -85,8 +85,8 @@ winner(State, Plyr):-
 	(tie(State) -> false; 
 		(terminal(State) -> 
 			flatten(State, S),
-			count_pieces( S, 1, Score1),
-			count_pieces( S, 2, Score2),
+			count_pieces(S, 1, Score1),
+			count_pieces(S, 2, Score2),
 			(Score1 > Score2 ->	Plyr is	1 ; Plyr is 2)	
 		; false	
 		)
@@ -101,8 +101,8 @@ winner(State, Plyr):-
 tie(State):-
 	terminal(State), 
 	flatten(State, S),
-	count_pieces( S, 1, Score1),
-	count_pieces( S, 2, Score2),
+	count_pieces(S, 1, Score1),
+	count_pieces(S, 2, Score2),
 	Score2 is Score1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%terminal(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,24 +138,25 @@ printList([H | L]) :-
 %
 
 moveRow(Plyr, State, MvList, Row ):-
-	(Row =< 6 -> 
+	(Row >= 6 -> 
 		MvList = []
 	;
 		moveCol(Plyr, State, MvList1, Row, 0 ),
-		newRol is Row + 1,
-		moveRow(Plyr, State, MvList2, newRow),
-		append(MvList1, MvList2, Mvlist)
+		NewRow is Row + 1,
+		moveRow(Plyr, State, MvList2, NewRow),
+		append(MvList1, MvList2, MvList)
 	).
 
 moveCol(Plyr, State, MvList, Row, Col):-
-	(Col =< 6 -> 
+	(Col >= 6 -> 
 		MvList = []
 	;
 		(validmove(Plyr, State, [Row, Col]) ->
 			H = [[Row, Col]]; H = []
-		),
-		moveCol(Plyr, State, T, Row, Col+1 ),
-		append(H, T, Mvlist)
+		), 
+		NewCol is Col + 1 ,
+		moveCol(Plyr, State, T, Row, NewCol ),
+		append(H, T, MvList)
 	).
 
 
@@ -169,7 +170,34 @@ moves(Plyr, State, MvList):-
 %     state) and NextPlayer (i.e. the next player who will move).
 %
 
+%%Helper for nextState, flips the pieces if consumable.
+flipDir(Plyr, NextPlyr, State, [Row, Col], DX, DY, NewState):-
+	(validDir(State, Plyr, [Row, Col], DX, DY) ->
+		flip(Plyr, NextPlyr, State, [Row, Col], DX, DY, NewState)
+	; NewState = State
+	).
 
+flip(Plyr, Opponent, State, [Row, Col], DX , DY, NewState):-
+	NewRow is Row + DY,
+	NewCol is Col + DX,
+	(get(State, [NewRow, NewCol], Opponent) ->
+		set(State, Temp, [NewRow, NewCol], Plyr),
+		flip(Plyr, Opponent, Temp, [NewRow, NewCol], DX, DY, NewState)
+	; NewState = State
+	).
+	
+nextState(Plyr,[Row, Col],State,NewState,NextPlyr):-
+	validmove(Plyr, State, [Row, Col]),
+	(Plyr is 1 -> NextPlyr = 2; NextPlyr = 1),
+	set(State, Temp, [Row, Col], Plyr),		
+	flipDir(Plyr, NextPlyr, Temp,  [Row, Col], -1, -1, Temp2),
+	flipDir(Plyr, NextPlyr, Temp2, [Row, Col], -1,  0, Temp3),
+	flipDir(Plyr, NextPlyr, Temp3, [Row, Col], -1,  1, Temp4),
+	flipDir(Plyr, NextPlyr, Temp4, [Row, Col],	 0, -1, Temp5),
+	flipDir(Plyr, NextPlyr, Temp5, [Row, Col],	 0,  1, Temp6),
+	flipDir(Plyr, NextPlyr, Temp6, [Row, Col],	 1, -1, Temp7),
+	flipDir(Plyr, NextPlyr, Temp7, [Row, Col],	 1,  0, Temp8),
+	flipDir(Plyr, NextPlyr, Temp8, [Row, Col],	 1,  1, NewState).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%validmove(Plyr,State,Proposed)%%%%%%%%%%%%%%%%%%%%
@@ -184,30 +212,36 @@ inBound(R,C):-
 	C >= 0,
 	C < 6.
 
-valid_dir( State, Plyr, [R, C], DX, DY):-
-	( Plyr == 1 -> Opponent is 2; Opponent is 1),
-	NewR is R + DY, 
-	NewC is C + DY, 
-	inBound(NewR, NewC),
-	get(State, [NewR, NewC], Value),
+%% Valid Position checks if the proposed locaiton can bracket the opponent
+validPosition(State, [Row, Col], Opponent, DX, DY) :-
+	get(State, [Row, Col], Value),
 	Value \= '.',
-	( Value == Opponent	->
-		valid_dir(State, Plyr, [NewR , NewC] , DX, DY)
+	(Value \= Opponent -> 
+		NewRow is Row + DY, NewCol is Col + DX,
+		validPosition(State, [NewRow, NewCol], Opponent, DX, DY)
 	; true).
 
-validmove(Plyr, S, [R|C]):-
-	inBound(R, C),
-	get(S, [R|C], Value),
-	Value == '.',
-	valid_dir( S, Plyr, [R, C],  1,  0),
-	valid_dir( S, Plyr, [R, C],  0,  1),
-	valid_dir( S, Plyr, [R, C], -1,	 0),
-	valid_dir( S, Plyr, [R, C],  0, -1),
+validDir( State, Plyr, [Row, Col], DX, DY):-
+	(Plyr is 1 -> Opponent = 2; Opponent = 1),
+	NewRow is Row + DY, 
+	NewCol is Col + DX, 
+	get(State, [NewRow, NewCol], Opponent),
+	validPosition(State, [NewRow, NewCol], Plyr, DX, DY).
 
-	valid_dir( S, Plyr, [R, C],  1,  1),
-	valid_dir( S, Plyr, [R, C],	 1, -1),
-	valid_dir( S, Plyr, [R, C], -1,  1),
-	valid_dir( S, Plyr, [R, C], -1, -1).
+validmove(Plyr, S, [R,C]):-
+	inBound(R, C),
+	get(S, [R, C], Value),
+	Value == '.',
+	(
+	validDir( S, Plyr, [R, C],  1,  0);
+	validDir( S, Plyr, [R, C],  0,  1);
+	validDir( S, Plyr, [R, C], -1,	0);
+	validDir( S, Plyr, [R, C],  0, -1);
+
+	validDir( S, Plyr, [R, C],  1,  1);
+	validDir( S, Plyr, [R, C],	1, -1);
+	validDir( S, Plyr, [R, C], -1,  1);
+	validDir( S, Plyr, [R, C], -1, -1)).
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%h(State,Val)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
