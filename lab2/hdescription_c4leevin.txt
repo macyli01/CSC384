@@ -10,3 +10,9 @@
 % First Name: Vincent
 % Student Number: 997454419
 %
+
+This heuristic is based on the assumption that more a state with more 
+potential moves is a better state for a particular player.  It is based
+on the retionale that reducing the number moves of the opponent will make
+make the oppenent to make bad moves eventually. 
+
