@@ -48,11 +48,11 @@
 
 % given helper: Inital state of the board 
 initBoard([ [.,.,.,.,.,.], 
-            [.,.,.,.,.,.],
-	    [.,.,1,2,.,.], 
-	    [.,.,2,1,.,.], 
-            [.,.,.,.,.,.], 
-	    [.,.,.,.,.,.] ]).
+			[.,.,.,.,.,.],
+			[.,.,1,2,.,.], 
+			[.,.,2,1,.,.], 
+			[.,.,.,.,.,.], 
+			[.,.,.,.,.,.] ]).
  
 %%%%%%%%%%%%%%%%%% IMPLEMENT: initialize(...)%%%%%%%%%%%%%%%%%%%%%
 %%% Using initBoard define initialize(InitialState,InitialPlyr). 
@@ -82,9 +82,15 @@ count_pieces([H|T], P, C):-
 %     Plyr has a higher score than the other player 
 
 winner(State, Plyr):-	
-	terminal(State),
-	not(tie(State).
-	
+	(tie(State) -> false; 
+		(terminal(State) -> 
+			flatten(State, S),
+			count_pieces( S, 1, Score1),
+			count_pieces( S, 2, Score2),
+			(Score1 > Score2 ->	Plyr is	1 ; Plyr is 2)	
+		; false	
+		)
+	).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%tie(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,17 +98,19 @@ winner(State, Plyr):-
 %% define tie(State) here. 
 %    - true if terminal State is a "tie" (no winner) 
 
-
-
-
+tie(State):-
+	terminal(State), 
+	flatten(State, S),
+	count_pieces( S, 1, Score1),
+	count_pieces( S, 2, Score2),
+	Score2 is Score1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%terminal(...)%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% define terminal(State). 
 %   - true if State is a terminal   
 
-terminal(State):- !.
-
+terminal(State):- moves(1, State, []), moves(2, State, []).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%showState(State)%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% given helper. DO NOT  change this. It's used by play.pl
@@ -129,9 +137,30 @@ printList([H | L]) :-
 %   - returns list MvList of all legal moves Plyr can make in State
 %
 
+moveRow(Plyr, State, MvList, Row ):-
+	(Row =< 6 -> 
+		MvList = []
+	;
+		moveCol(Plyr, State, MvList1, Row, 0 ),
+		newRol is Row + 1,
+		moveRow(Plyr, State, MvList2, newRow),
+		append(MvList1, MvList2, Mvlist)
+	).
+
+moveCol(Plyr, State, MvList, Row, Col):-
+	(Col =< 6 -> 
+		MvList = []
+	;
+		(validmove(Plyr, State, [Row, Col]) ->
+			H = [[Row, Col]]; H = []
+		),
+		moveCol(Plyr, State, T, Row, Col+1 ),
+		append(H, T, Mvlist)
+	).
 
 
-
+moves(Plyr, State, MvList):-
+	moveRow(Plyr, State, MvList, 0).
 
 %%%%%%%%%%%%%%nextState(Plyr,Move,State,NewState,NextPlyr)%%%%%%%%%%%%%%%%%%%%
 %% 
