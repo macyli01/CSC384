@@ -228,6 +228,8 @@ validDir( State, Plyr, [Row, Col], DX, DY):-
 	get(State, [NewRow, NewCol], Opponent),
 	validPosition(State, [NewRow, NewCol], Plyr, DX, DY).
 
+validmove(_, _, 'n').
+
 validmove(Plyr, S, [R,C]):-
 	inBound(R, C),
 	get(S, [R, C], Value),
@@ -253,7 +255,21 @@ validmove(Plyr, S, [R,C]):-
 %          the value of state (see handout on ideas about
 %          good heuristics.
 
-h(_, 0).
+%% This heuristic compares the number of potential moves of different 
+%% players. Player with more potential valid moves is of a better chance
+%% of winning.
+
+h(State, Val):-
+	( terminal(State) ->
+		Val is 0
+	;	
+		moves(1, State, MvList1),
+		moves(2, State, MvList2),
+		length(MvList1, L1),
+		length(MvList2, L2),
+		Val is L1 - L2	
+	).
+	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%lowerBound(B)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
@@ -261,7 +277,7 @@ h(_, 0).
 %   - returns a value B that is less than the actual or heuristic value
 %     of all states.
 
-lowerBound(-100).  
+lowerBound(-32).  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%upperBound(B)%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
@@ -269,7 +285,7 @@ lowerBound(-100).
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-upperBound(100). 
+upperBound(32). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                       %

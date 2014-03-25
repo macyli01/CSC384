@@ -45,14 +45,16 @@ c4leevin_max(C1, C2, C2) :- C1 < C2.
 c4leevin_h(State, Val) :- terminal(State), !, Val=0.
 c4leevin_h(State, Val) :- 
 	( terminal(State) ->
+		Val is 0
+	;	
 		moves(1, State, MvList1),
 		moves(2, State, MvList2),
 		length(MvList1, L1),
 		length(MvList2, L2),
 		Val is L1 - L2	
-	; Val is 0).
+	).
 
 % The bounds
-c4leevin_lowerBound(-36).
-c4leevin_upperBound(36).
+c4leevin_lowerBound(-32).
+c4leevin_upperBound(32).
 
