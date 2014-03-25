@@ -102,6 +102,8 @@ Yes
 %% tables.
 %% (MiniMax vs. Alpha-Beta, with and without your heuristic if relevant)
 
-
+From the table, alpha-beta pruning expands less nodes than MiniMax for 
+all three test boards.  This is expected as Alpha-beta pruning prunes
+unnecessary node expansions. 
 
 
